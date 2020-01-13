@@ -15,3 +15,6 @@ const options = {
 
 const db = pgp(options);
 module.exports = db;
+
+// const db = require('./models/connection');
+// db.any(`select * from pets;`).then(data=> console.log(data))
