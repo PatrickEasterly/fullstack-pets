@@ -1,8 +1,16 @@
 const db = require('./connection');
 
 // create
-function create() {
-
+async function create(name, species, birthdate, owner_id) {
+    const result = await db.result(`
+    insert into pets
+    (name, species, birthdate, owner_id)
+values
+    ($1, $2, $3, $4);
+    `, 
+    [name, species, birthdate, owner_id]
+    );
+    return result;
 }
 
 // retrieve
@@ -33,7 +41,8 @@ async function all() {
             return [];
         })
 
-    console.log(allPets);
+    // console.log(allPets);
+    return allPets;
 }
 
 ///// Promise version
@@ -52,20 +61,60 @@ async function all() {
 
 // update
 
-function update() {
+async function updateName(id, name) {
+    const result = await db.result(`
+        update pets set 
+            name=$1
+        where id=$2;
+    `,  [name, id]);
 
+    if (result.rowCount===1) {
+        return id;
+    }
+    else {
+        return null;
+    }
+}
+
+async function updateBirthdate(id, dateObject) {
+    // postgres wants this: '2020-01-13'
+
+    const year = dateObject.getFullYear();
+    let month = dateObject.getMonth() + 1;
+    if (month < 10){
+        month = `0${month}`;
+    }
+    let day = dateObject.getDate();
+    if (day < 10) {
+        day = `0${day}`
+    }
+    const dateString = `${year}-${month}-${day}`;
+    const result = await db.result(`
+        update pets set
+            birthdate=$1
+        where id=$2
+    `, [dateString, id]);
+    return result;
 }
 
 // delete
 
-function del() {
-
+async function del(id) {
+    const result = await db.result(`delete from pets where id=$1`, [id]);
+    console.log(result);
+    if (result.rowCount===1) {
+        return id;
+    }
+    else {
+        return null;
+    }
 }
 
 module.exports = {
     create,
     one,
     all,
-    update,
+    updateName,
+    updateBirthdate,
     del
 }

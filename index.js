@@ -1,0 +1,25 @@
+const pets = require('./models/pets');
+
+// pets.all()
+//     .then(allThePets => {
+//         // do stuff
+//         console.log()
+//     })
+
+async function main() {
+    // const thePets = await pets.all();
+    // console.log(thePets);
+    // const aPet = await pets.one(1);
+    // console.log(aPet);
+    // const result = await pets.del(1);
+    // console.log(result);
+    // const result = await pets.updateName(3, 'dexter like the show');
+    // console.log(result);
+    // const updateResult = await pets.updateBirthdate(1, new Date());
+    // console.log(updateResult);
+    const createResult = await pets.create('billy', 'goat', '2020-01-13', 1);
+    console.log(createResult);
+}
+
+main();
+
